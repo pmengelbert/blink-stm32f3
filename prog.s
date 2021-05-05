@@ -1,24 +1,47 @@
 .syntax unified
 .thumb
+.text
+
+RCC_AHBENR = 0x40021014
+GPIOA_MODER = 0x48000000
+GPIOA_OTYPER = 0x48000004
+GPIOA_OSPEEDR = 0x48000008
+GPIOA_OPUPDR = 0x4800000c
+GPIOA_ODR = 0x48000014
 
 .global main
-.text
 main:
-	ldr r0, =$0x48000000
-	ldr r7, =$(1 << 17)
-	mov r1, $4
-	eor r2, r2
-	mov r3, $2
+	ldr r1, =RCC_AHBENR
+	ldr r0, [r1]
+	orr r0, $0x00020000
+	str r0, [r1]
 
-	ldr r6, =$0x40020000
-	ldr r5, [r6, $0x14]
-	orr r7, r5, r7
-	str r7, [r6, $0x14]
-	str r1, [r0]
-	str r2, [r0, $0x04]
-	str r2, [r0, $0x08]
-	str r2, [r0, $0x0c]
-	str r3, [r0, $0x18]
+	ldr r1, =GPIOA_MODER
+	ldr r0, [r1]
+	orr r0, $0x00000005
+	and r0, $0xfffffff5
+	str r0, [r1]
+
+	ldr r1, =GPIOA_OTYPER
+	ldr r0, [r1]
+	and r0, $0xfffffffc
+	str r0, [r1]
+
+	ldr r1, =GPIOA_OSPEEDR
+	ldr r0, [r1]
+	and r0, $0xfffffff0
+	str r0, [r1]
+
+	ldr r1, =GPIOA_OPUPDR
+	ldr r0, [r1]
+	and r0, $0xfffffff0
+	str r0, [r1]
+
+	ldr r1, =GPIOA_ODR
+	ldr r0, [r1]
+	orr r0, $0x00000001
+	and r0, $0xfffffffd
+	str r0, [r1]
 loop:
 	b loop
 
