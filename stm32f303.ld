@@ -3,9 +3,9 @@
 /* Define the memory mapping of the chip */
 MEMORY
 {
-  flash (rx)  : ORIGIN = 0x08000000, LENGTH = 128K
-  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 40K
-  ccm (rwx) : ORIGIN = 0x10000000, LENGTH = 8K
+  flash (rx)  : ORIGIN = 0x08000000, LENGTH = 256K
+  ram (rwx) :   ORIGIN = 0x20000000, LENGTH = 40K
+  ccm (rwx) :   ORIGIN = 0x10000000, LENGTH = 8K
 }
 
 /* Define some useful symbols that can be used from the code */
@@ -13,7 +13,7 @@ __rom_start__	= ORIGIN(flash);
 __rom_size__	= LENGTH(flash);
 __ram_start__	= ORIGIN(ram);
 __ram_size__	= LENGTH(ram);
-__ram_end__	= __ram_start__ + __ram_size__;
+__ram_end__	    = __ram_start__ + __ram_size__;
 __ccm_start__	= ORIGIN(ccm);
 __ccm_size__	= LENGTH(ccm);
 
@@ -38,14 +38,6 @@ SECTIONS
   KEEP(*(.boot*))				/* Reset vectors */
   *(.text*)				/* Program code */
   *(.rodata*)			/* Read only data */
-  *(.glue_7)
-  *(.glue_7t)
-  *(.eh_frame)
-  . = ALIGN(4);
-  __ctors_start__ = .;
-  KEEP(*(.init_array));			/* C++ constructors */
-  KEEP(*(.ctors));			/* C++ constructors */
-  __ctors_end__ = .;
   . = ALIGN(16);
   __text_end__ = .;
   } >flash
@@ -66,12 +58,3 @@ SECTIONS
   *(COMMON)				/* Common data */
   __bss_end__ = .;			/* Used in crt0.S */
   } >ram
-
-/* C++ exception unwinding stuff--needed by some toolchains */
-
-  .ARM.extab : { *(.ARM.extab* .gnu.linkonce.armextab.*) } >flash
-
-  __exidx_start = .;
-  .ARM.exidx : { *(.ARM.exidx* .gnu.linkonce.armexidx.*) } >flash
-  __exidx_end = .;
-}  
