@@ -158,7 +158,7 @@ _start: 	.word		__stack_end__	/* The stack is set up by the CPU using this at re
 
 /*===========================================================================*/
 
-		.section .text,"x"
+		.section .text
 /* Default exception handler--does nothing but return */
 
 		.thumb_func
@@ -174,18 +174,18 @@ Reset_Handler:
 
 /* Copy initialized data from flash to RAM */
 
-copy_data:	
-		ldr			r1, DATA_BEG
-		ldr 		r2, TEXT_END
-		ldr 		r3, DATA_END
-		subs		r3, r3, r1		/* Length of initialized data */
-		beq			zero_bss		/* Skip if none */
-
-copy_data_loop: 
-		ldrb		r4, [r2], #1		/* Read byte from flash */
-		strb		r4, [r1], #1  		/* Store byte to RAM */
-		subs		r3, r3, #1  		/* Decrement counter */
-		bgt 		copy_data_loop		/* Repeat until done */
+@copy_data:	
+@		ldr			r1, DATA_BEG
+@		ldr 		r2, TEXT_END
+@		ldr 		r3, DATA_END
+@		subs		r3, r3, r1		/* Length of initialized data */
+@		beq			zero_bss		/* Skip if none */
+@
+@copy_data_loop: 
+@		ldrb		r4, [r2], #1		/* Read byte from flash */
+@		strb		r4, [r1], #1  		/* Store byte to RAM */
+@		subs		r3, r3, #1  		/* Decrement counter */
+@		bgt 		copy_data_loop		/* Repeat until done */
 
 /* Zero uninitialized data (bss) */
 
@@ -193,7 +193,7 @@ zero_bss:
 		ldr 		r1, BSS_BEG
 		ldr 		r3, BSS_END
 		subs 		r3, r3, r1		/* Length of uninitialized data */
-		beq			call_ctors		/*Skip if none */
+		beq			call_main		/*Skip if none */
 
 		mov 		r2, #0
 
