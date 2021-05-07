@@ -53,11 +53,13 @@ SECTIONS
   /* Initialized data is allocated in flash, but will be moved to RAM by the
    * boot code. */
   . = ALIGN(16);
-  __data_beg__ = .;			/* Used in crt0.S */
+  __load_data_beg__ = .;			/* Used in crt0.S */
   .data : {
+  __data_beg__ = .;
   *(.data)				/* Initialized data */
+  __data_end__ = .;
   } >ram AT > flash 
-  __data_end__ = .;			/* Used in crt0.S */
+  __load_data_end__ = .;			/* Used in crt0.S */
   __data_size__ = __data_end__ - __data_beg__;
 
   /* And here is all the uninitialized data. It will follow the initialized

@@ -27,8 +27,9 @@ main:
 	orr r1, 0x00000001
 	str r1, [r0]
 
+	@ set up DMA
 	ldr r0, =DMA_CPAR1
-	ldr r1, =__data_beg__  @ is this right?
+	ldr r1, =__load_data_beg__  @ is this right?
 	str r1, [r0]
 
 	ldr r0, =DMA_CMAR1

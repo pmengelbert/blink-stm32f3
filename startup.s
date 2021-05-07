@@ -20,19 +20,6 @@ This file is distributed under the terms of the MIT licence.
 		.global		Reset_Handler
 		.global		Default_Handler
 
-/* Import these. They are defined either in the link script or in C code
-   somewhere else. */
-
-		.extern		__text_end__
-		.extern		__data_beg__
-		.extern		__data_end__
-		.extern		__bss_beg__
-		.extern		__bss_end__
-		.extern		__stack_end__
-		.extern		__ctors_start__
-		.extern		__ctors_end__
-		.extern		main
-
 /*===========================================================================*/
 
 /* Use Default_handler for all exceptions and interrupts, unless another
