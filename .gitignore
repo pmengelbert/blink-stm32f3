@@ -1,4 +1,6 @@
 *.o
 prog
 led
+dma
+blink
 *.bin
