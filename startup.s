@@ -44,112 +44,108 @@ DMA_CMAR1 = 0x40020014
 
 /* Exception vector table--Common to all Cortex-M4 */
 
-_start: 	.word		__stack_end__	/* The stack is set up by the CPU using this at reset */
-		.word		Reset_Handler		/* Then it will jump to this address */
-
-		IRQ		NMI_Handler				// Define all other handlers to the
-		IRQ		HardFault_Handler		// default value, using the IRQ macro
-		IRQ		MemManage_Handler		// we defined above
-		IRQ		BusFault_Handler
-		IRQ		UsageFault_Handler
-		.word		0
-		.word		0
-		.word		0
-		.word		0
-		IRQ		SVC_Handler
-		IRQ		DebugMon_Handler
-		.word		0
-		IRQ		PendSV_Handler
-		IRQ		SysTick_Handler
-
-/* Hardware interrupts specific to the STM32F405
-   TODO review this and see if the STM32F303 is close enough ! 
- 
- NOTE: you can comment all of this if you don't use interrupts, to save a bit of
- flash space. Or if you are crazy you can even interleave code and vectors.*/
-
-		IRQ		WWDG_IRQHandler
-		IRQ		PVD_IRQHandler
-		IRQ		TAMP_STAMP_IRQHandler
-		IRQ		RTC_WKUP_IRQHandler
-		IRQ		FLASH_IRQHandler
-		IRQ		RCC_IRQHandler
-		IRQ		EXTI0_IRQHandler
-		IRQ		EXTI1_IRQHandler
-		IRQ		EXTI2_IRQHandler
-		IRQ		EXTI3_IRQHandler
-		IRQ		EXTI4_IRQHandler
-		IRQ		DMA1_Stream0_IRQHandler
-		IRQ		DMA1_Stream1_IRQHandler
-		IRQ		DMA1_Stream2_IRQHandler
-		IRQ		DMA1_Stream3_IRQHandler
-		IRQ		DMA1_Stream4_IRQHandler
-		IRQ		DMA1_Stream5_IRQHandler
-		IRQ		DMA1_Stream6_IRQHandler
-		IRQ		ADC_IRQHandler
-		IRQ		CAN1_TX_IRQHandler
-		IRQ		CAN1_RX0_IRQHandler
-		IRQ		CAN1_RX1_IRQHandler
-		IRQ		CAN1_SCE_IRQHandler
-		IRQ		EXTI9_5_IRQHandler
-		IRQ		TIM1_BRK_TIM9_IRQHandler
-		IRQ		TIM1_UP_TIM10_IRQHandler
-		IRQ		TIM1_TRG_COM_TIM11_IRQHandler
-		IRQ		TIM1_CC_IRQHandler
-		IRQ		TIM2_IRQHandler
-		IRQ		TIM3_IRQHandler
-		IRQ		TIM4_IRQHandler
-		IRQ		I2C1_EV_IRQHandler
-		IRQ		I2C1_ER_IRQHandler
-		IRQ		I2C2_EV_IRQHandler
-		IRQ		I2C2_ER_IRQHandler
-		IRQ		SPI1_IRQHandler
-		IRQ		SPI2_IRQHandler
-		IRQ		USART1_IRQHandler
-		IRQ		USART2_IRQHandler
-		IRQ		USART3_IRQHandler
-		IRQ		EXTI15_10_IRQHandler
-		IRQ		RTC_Alarm_IRQHandler
-		IRQ		OTG_FS_WKUP_IRQHandler
-		IRQ		TIM8_BRK_TIM12_IRQHandler
-		IRQ		TIM8_UP_TIM13_IRQHandler
-		IRQ		TIM8_TRG_COM_TIM14_IRQHandler
-		IRQ		TIM8_CC_IRQHandler
-		IRQ		DMA1_Stream7_IRQHandler
-		IRQ		FSMC_IRQHandler
-		IRQ		SDIO_IRQHandler
-		IRQ		TIM5_IRQHandler
-		IRQ		SPI3_IRQHandler
-		IRQ		UART4_IRQHandler
-		IRQ		UART5_IRQHandler
-		IRQ		TIM6_DAC_IRQHandler
-		IRQ		TIM7_IRQHandler
-		IRQ		DMA2_Stream0_IRQHandler
-		IRQ		DMA2_Stream1_IRQHandler
-		IRQ		DMA2_Stream2_IRQHandler
-		IRQ		DMA2_Stream3_IRQHandler
-		IRQ		DMA2_Stream4_IRQHandler
-		IRQ		ETH_IRQHandler
-		IRQ		ETH_WKUP_IRQHandler
-		IRQ		CAN2_TX_IRQHandler
-		IRQ		CAN2_RX0_IRQHandler
-		IRQ		CAN2_RX1_IRQHandler
-		IRQ		CAN2_SCE_IRQHandler
-		IRQ		OTG_FS_IRQHandler
-		IRQ		DMA2_Stream5_IRQHandler
-		IRQ		DMA2_Stream6_IRQHandler
-		IRQ		DMA2_Stream7_IRQHandler
-		IRQ		USART6_IRQHandler
-		IRQ		I2C3_EV_IRQHandler
-		IRQ		I2C3_ER_IRQHandler
-		IRQ		OTG_HS_EP1_OU_IRQHandler
-		IRQ		OTG_HS_EP1_IN_IRQHandler
-		IRQ		OTG_HS_WKUP_IRQHandler
-		IRQ		OTG_HS_IRQHandler
-		IRQ		DCMI_IRQHandler
-		IRQ		CRYP_IRQHandler
-		IRQ		HASH_RNG_IRQHandler
-		IRQ		FPU_IRQHandler
+_start: 
+/*0x00*/    .word		__stack_end__	/* The stack is set up by the CPU using this at reset */
+/*0x04*/    .word		Reset_Handler		/* Then it will jump to this address */
+/*0x08*/    IRQ		NMI_Handler				// Define all other handlers to the
+/*0x0c*/    IRQ		HardFault_Handler		// default value, using the IRQ macro
+/*0x10*/    IRQ		MemManage_Handler		// we defined above
+/*0x14*/    IRQ		BusFault_Handler
+/*0x18*/    IRQ		UsageFault_Handler
+/*0x1c*/    .word		0
+/*0x20*/    .word		0
+/*0x24*/    .word		0
+/*0x28*/    .word		0
+/*0x2c*/    IRQ		SVC_Handler
+/*0x30*/    .word		0
+/*0x34*/    .word		0
+/*0x38*/    IRQ		PendSV_Handler
+/*0x3c*/    IRQ		SysTick_Handler
+/*0x40*/    IRQ		WWDG_IRQHandler
+/*0x44*/    IRQ		PVD_IRQHandler
+/*0x48*/    IRQ		TAMP_STAMP_IRQHandler
+/*0x4c*/    IRQ		RTC_WKUP_IRQHandler
+/*0x50*/    IRQ		FLASH_IRQHandler
+/*0x54*/    IRQ		RCC_IRQHandler
+/*0x58*/    IRQ		EXTI0_IRQHandler
+/*0x5c*/    IRQ		EXTI1_IRQHandler
+/*0x60*/    IRQ		EXTI2_IRQHandler
+/*0x64*/    IRQ		EXTI3_IRQHandler
+/*0x68*/    IRQ		EXTI4_IRQHandler
+/*0x6c*/    IRQ		DMA1_Stream0_IRQHandler
+/*0x70*/    IRQ		DMA1_Stream1_IRQHandler
+/*0x74*/    IRQ		DMA1_Stream2_IRQHandler
+/*0x78*/    IRQ		DMA1_Stream3_IRQHandler
+/*0x7c*/    IRQ		DMA1_Stream4_IRQHandler
+/*0x80*/    IRQ		DMA1_Stream5_IRQHandler
+/*0x84*/    IRQ		DMA1_Stream6_IRQHandler
+/*0x88*/    IRQ		ADC_IRQHandler
+/*0x8c*/    IRQ		CAN1_TX_IRQHandler
+/*0x90*/    IRQ		CAN1_RX0_IRQHandler
+/*0x94*/    IRQ		CAN1_RX1_IRQHandler
+/*0x98*/    IRQ		CAN1_SCE_IRQHandler
+/*0x9c*/    IRQ		EXTI9_5_IRQHandler
+/*0xa0*/    IRQ		TIM1_BRK_TIM15_IRQHandler
+/*0xa4*/    IRQ		TIM1_UP_TIM16_IRQHandler
+/*0xa8*/    IRQ		TIM1_TRG_COM_TIM17_IRQHandler
+/*0xac*/    IRQ		TIM1_CC_IRQHandler
+/*0xb0*/    IRQ		TIM2_IRQHandler
+/*0xb4*/    IRQ		TIM3_IRQHandler
+/*0xb8*/    IRQ		TIM4_IRQHandler
+/*0xbc*/    IRQ		I2C1_EV_IRQHandler
+/*0xc0*/    IRQ		I2C1_ER_IRQHandler
+/*0xc4*/    IRQ		I2C2_EV_IRQHandler
+/*0xc8*/    IRQ		I2C2_ER_IRQHandler
+/*0xcc*/    IRQ		SPI1_IRQHandler
+/*0xd0*/    IRQ		SPI2_IRQHandler
+/*0xd4*/    IRQ		USART1_IRQHandler
+/*0xd8*/    IRQ		USART2_IRQHandler
+/*0xdc*/    IRQ		USART3_IRQHandler
+/*0xe0*/    IRQ		EXTI15_10_IRQHandler
+/*0xe4*/    IRQ		RTC_Alarm_IRQHandler
+/*0xe8*/    IRQ		OTG_FS_WKUP_IRQHandler
+/*0xec*/    IRQ		TIM8_BRK_IRQHandler
+/*0xf0*/    IRQ		TIM8_UP_IRQHandler
+/*0xf4*/    IRQ		TIM8_TRG_COM_IRQHandler
+/*0xf8*/    IRQ		TIM8_CC_IRQHandler
+/*0xfc*/    IRQ		ADC3_IRQHandler
+/*0x100*/   IRQ		FMC_IRQHandler
+/*0x104*/   .word		0
+/*0x108*/   .word		0
+/*0x10c*/   IRQ		SPI3_IRQHandler
+/*0x110*/   IRQ		UART4_IRQHandler
+/*0x114*/   IRQ		UART5_IRQHandler
+/*0x118*/   IRQ		TIM6_DAC_IRQHandler
+/*0x11c*/   IRQ		TIM7_IRQHandler
+/*0x120*/   IRQ		DMA2_Channel1_IRQHandler
+/*0x124*/   IRQ		DMA2_Channel2_IRQHandler
+/*0x128*/   IRQ		DMA2_Channel3_IRQHandler
+/*0x12c*/   IRQ		DMA2_Channel4_IRQHandler
+/*0x130*/   IRQ		DMA2_Channel5_IRQHandler
+/*0x134*/   IRQ		ADC4_IRQHandler
+/*0x138*/   .word		0
+/*0x13c*/   .word		0
+/*0x140*/   IRQ		COMP_1_2_3_IRQHandler
+/*0x144*/   IRQ		COMP_4_5_6_IRQHandler
+/*0x148*/   IRQ		COMP_7_IRQHandler
+/*0x14c*/   .word		0
+/*0x150*/   .word		0
+/*0x154*/   .word		0
+/*0x158*/   .word		0
+/*0x15c*/   .word		0
+/*0x160*/   IRQ		I2C3_EV_IRQHandler
+/*0x164*/   IRQ		I2C3_ER_IRQHandler
+/*0x168*/   IRQ		USB_HP_IRQHandler
+/*0x16c*/   IRQ		USB_LP_IRQHandler
+/*0x170*/   IRQ		USB_WKUP_RMP_IRQHandler
+/*0x174*/   IRQ		TIM20_BRK_IRQHandler
+/*0x178*/   IRQ		TIM20_UP_IRQHandler
+/*0x17c*/   IRQ		TIM20_TRG_COM_IRQHandler
+/*0x180*/   IRQ		TIM20_CC_IRQHandler
+/*0x184*/   IRQ		FPU_IRQHandler
+/*0x188*/   .word		0
+/*0x18c*/   .word		0
+/*0x190*/   IRQ		SPI4_IRQHandler
 
 /*===========================================================================*/
 
