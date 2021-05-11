@@ -1,6 +1,7 @@
 .syntax unified
 .thumb
-.text
+.data
+.asciz "penis butt poo"
 
 RCC_AHBENR = 0x40021014
 GPIOA_MODER = 0x48000000
@@ -10,6 +11,7 @@ GPIOA_OPUPDR = 0x4800000c
 GPIOA_ODR = 0x48000014
 
 .global main
+.text
 main:
 	ldr r1, =RCC_AHBENR
 	ldr r0, [r1]
@@ -45,3 +47,4 @@ main:
 loop:
 	b loop
 
+@ vim:ft=armv5

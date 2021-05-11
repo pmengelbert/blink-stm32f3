@@ -22,7 +22,7 @@ main:
 
 	@ set up DMA
 	ldr r0, =DMA_CPAR1
-	ldr r1, =__load_data_beg__  @ is this right?
+	ldr r1, =__load_data_beg__
 	str r1, [r0]
 
 	ldr r0, =DMA_CMAR1
@@ -43,15 +43,7 @@ main:
 	ldr r1, [r0]
 	ldr r3, =$0xffff8000
 	and r1, r3
-	ldr r2, =$(0b111000011000000 & 0x00007fff)
-	orr r1, r2
-	str r1, [r0]
-
-	ldr r0, =DMA_CCR1
-	ldr r1, [r0]
-	ldr r3, =$0xfffffffe
-	and r1, r3
-	mov r2, #1
+	ldr r2, =$(0x70c1 & 0x00007fff)
 	orr r1, r2
 	str r1, [r0]
 

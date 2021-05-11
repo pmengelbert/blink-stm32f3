@@ -34,6 +34,14 @@ handler is provided elsewhere.
 
 /*===========================================================================*/
 
+RCC_AHBENR = 0x40021014
+
+DMA1_BASE = 0x40020000
+DMA_CCR1 = 0x40020008
+DMA_CNDTR1 = 0x4002000c
+DMA_CPAR1 = 0x40020010
+DMA_CMAR1 = 0x40020014
+
 /* Exception vector table--Common to all Cortex-M4 */
 
 _start: 	.word		__stack_end__	/* The stack is set up by the CPU using this at reset */
@@ -161,18 +169,38 @@ Reset_Handler:
 
 /* Copy initialized data from flash to RAM */
 
-@copy_data:	
-@		ldr			r1, DATA_BEG
-@		ldr 		r2, TEXT_END
-@		ldr 		r3, DATA_END
-@		subs		r3, r3, r1		/* Length of initialized data */
-@		beq			zero_bss		/* Skip if none */
-@
-@copy_data_loop: 
-@		ldrb		r4, [r2], #1		/* Read byte from flash */
-@		strb		r4, [r1], #1  		/* Store byte to RAM */
-@		subs		r3, r3, #1  		/* Decrement counter */
-@		bgt 		copy_data_loop		/* Repeat until done */
+copy_data:	
+	ldr r0, =RCC_AHBENR
+	ldr r1, [r0]
+	orr r1, $0x00000001
+	str r1, [r0]
+
+	@ set up DMA
+	ldr r0, =DMA_CPAR1
+	ldr r1, =__load_data_beg__
+	str r1, [r0]
+
+	ldr r0, =DMA_CMAR1
+	ldr r1, =__ram_start__
+	str r1, [r0]
+
+	ldr r0, =DMA_CNDTR1
+	ldr r1, [r0]
+	ldr r3, =$0xffff0000
+	and r1, r3
+	ldr r2, =__data_size__
+	ldr r3, =$0x0000ffff
+	and r2, r3
+	orr r1, r2
+	str r1, [r0]
+
+	ldr r0, =DMA_CCR1
+	ldr r1, [r0]
+	ldr r3, =$0xffff8000
+	and r1, r3
+	ldr r2, =$(0x70c1 & 0x00007fff)
+	orr r1, r2
+	str r1, [r0]
 
 /* Zero uninitialized data (bss) */
 
