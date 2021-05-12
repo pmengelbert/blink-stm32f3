@@ -1,0 +1,25 @@
+la a
+la r
+b *0x8000194
+monitor reset halt
+set $RCC_AHBENR =    0x40021014
+set $RCC_AHB2ENR =   0x40021018
+
+set $TIM16 =			0x40014400
+set $TIM16_CR1 =		$TIM16 + 0x00
+set $TIM16_CR2 =		$TIM16 + 0x04
+set $TIM16_DIER =	$TIM16 + 0x0c
+set $TIM16_SR =		$TIM16 + 0x10
+set $TIM16_CCRM1 =	$TIM16 + 0x18
+set $TIM16_CCER =	$TIM16 + 0x20
+set $TIM16_CNT =		$TIM16 + 0x24
+set $TIM16_PSC =		$TIM16 + 0x28
+set $TIM16_ARR =		$TIM16 + 0x2c
+set $TIM16_CCR1 =	$TIM16 + 0x34
+set $GPIOA_MODER =   0x48000000
+set $GPIOA_OTYPER =  0x48000004
+set $GPIOA_OSPEEDR = 0x48000008
+set $GPIOA_OPUPDR =  0x4800000c
+set $GPIOA_ODR = 	0x48000014
+set $GPIOA_AFRL = 	0x48000020
+

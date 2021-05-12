@@ -15,6 +15,7 @@ TIM16_CNT =		TIM16 + 0x24
 TIM16_PSC =		TIM16 + 0x28
 TIM16_ARR =		TIM16 + 0x2c
 TIM16_CCR1 =	TIM16 + 0x34
+TIM16_BDTR =	TIM16 + 0x44
 
 
 GPIOA_MODER =   0x48000000
@@ -22,50 +23,72 @@ GPIOA_OTYPER =  0x48000004
 GPIOA_OSPEEDR = 0x48000008
 GPIOA_OPUPDR =  0x4800000c
 GPIOA_ODR = 	0x48000014
+GPIOA_AFRL = 	0x48000020
 
 .global main
-.global TIM2_IRQHandler
 .global here
 .text
 main:
-	@ turn on the TIM16 timer
+	@ turn on the TIM16 timer clock
 	ldr r1, =RCC_AHB2ENR
 	ldr r0, [r1]
 	orr r0, $0x00020000
 	str r0, [r1]
 
-	@ configure the timer
-	ldr r1, =TIM16_CR1
+	@ turn on the GPIO clock
+	ldr r1, =RCC_AHBENR
 	ldr r0, [r1]
-	orr r0, $0x00000000 @ set up one-pulse mode
+	and r0, $0xfffdffff
+	orr r0, $0x00020000
 	str r0, [r1]
 
 	@ configure capture
 	ldr r1, =TIM16_CCRM1
 	ldr r0, [r1]
-	orr r0, 0x00000030
+	ldr r2, =$0xfffeff8f
+	and r0, r2
+	orr r0, $0x00000030 @ set
 	str r0, [r1]
 
 	@ more configure capture
 	ldr r1, =TIM16_CCER
-	mov r0, $0x00
+	mov r0, $0x00000001 @ enable capture/compare channel 1
 	str r0, [r1]
 
-	ldr r1, =TIM16_DIER
+	ldr r1, =TIM16_BDTR
 	ldr r0, [r1]
-	orr r0, $0x00000002
+	orr r0, $(1 << 15) @ set main output enable (MOE)
 	str r0, [r1]
+
+	@ ldr r1, =TIM16_DIER
+	@ ldr r0, [r1]
+	@ orr r0, $0x00000002
+	@ str r0, [r1]
 
 	ldr r1, =TIM16_PSC
-	mov r0, $7999
+	mov r0, $7999 @ set prescaler such that the 8MHz clock will be scaled down to 1KHz
 	str r0, [r1]
 
 	ldr r1, =TIM16_ARR
-	mov r0, $0xffff
+	mov r0, $1000 @ reset the counter after one second
 	str r0, [r1]
 
 	ldr r1, =TIM16_CCR1
-	mov r0, $0x1000
+	mov r0, $500 @ in the middle of the timer's cycle, the there will be a match
+	str r0, [r1]
+
+	ldr r1, =GPIOA_MODER
+	ldr r0, [r1]
+	ldr r2, =$0xffff3ffc
+	and r0, r2
+	ldr r2, =$0x00002001 @ enable GPIOA pin 1 as output and pin 6 as "alternate function"
+	orr r0, r2
+	str r0, [r1]
+
+	ldr r1, =GPIOA_AFRL
+	ldr r0, [r1]
+	and r0, $0xf0ffffff
+	orr r0, $0x01000000 @ use alternate function 1, i.e. TIM16_CH1
 	str r0, [r1]
 
 here:
@@ -74,64 +97,7 @@ here:
 	orr r0, $0x01
 	str r0, [r1]
 
-	ldr r0, =TIM16_SR
-	ldr r4, [r1]
-
-	@ turn on the GPIO pins
-	ldr r1, =RCC_AHBENR
-	ldr r0, [r1]
-	orr r0, $0x00020000
-	str r0, [r1]
-
-
-	ldr r1, =GPIOA_MODER
-	ldr r0, [r1]
-	orr r0, $0x00000005
-	and r0, $0xfffffff5
-	str r0, [r1]
-
-	ldr r1, =GPIOA_OTYPER
-	ldr r0, [r1]
-	and r0, $0xfffffffc
-	str r0, [r1]
-
-	ldr r1, =GPIOA_OSPEEDR
-	ldr r0, [r1]
-	and r0, $0xfffffff0
-	str r0, [r1]
-
-	ldr r1, =GPIOA_OPUPDR
-	ldr r0, [r1]
-	and r0, $0xfffffff0
-	str r0, [r1]
-
-	ldr r1, =GPIOA_ODR
-	ldr r0, [r1]
-	mov r0, $0x00000001
-	str r0, [r1]
-
-	ldr r1, =TIM16_CNT
-	ldr r0, [r1]
-	mov r3, $1000
-	mov r0, $0
-	str r0, [r1]
-.L3loop:
-	ldr r1, =TIM16_CNT
-	ldr r4, [r1]
-	cmp r3, r4
-	bge .L3loop
-
-	mov r0, $0
-	str r0, [r1]
-
-	ldr r1, =GPIOA_ODR
-	ldr r0, [r1]
-	eor r0, $0x00000001
-	str r0, [r1]
 loop:
-	b .L3loop
-
-TIM2_IRQHandler:
-	b TIM2_IRQHandler
+	b loop
 
 @ vim:ft=armv5
