@@ -47,6 +47,33 @@ set_up_gpio:
 	orr r0, r2
 	str r0, [r1]
 
+	ldr r1, =GPIOA_ODR
+	ldr r2, =__ram_start__
+	ldr r5, =$8000000/512
+gpio_loop:
+	ldr r0, [r2, $0]
+	str r0, [r1]
+	mov r6, r5
+	bl delay
+	ldrb r0, [r2, $1]
+	str r0, [r1]
+	mov r6, r5
+	bl delay
+	ldrb r0, [r2, $2]
+	str r0, [r1]
+	mov r6, r5
+	bl delay
+
+	b gpio_loop
+
+delay:
+	subs r6, $1
+	bne delay
+	bx lr
+
+end:
+	b .
+
 @ set up continuous dma between .data section and GPIO port A
 set_up_dma:
 	@ disable the channel to enable writes
@@ -82,7 +109,5 @@ set_up_dma:
 	str r0, [r1]
 
 @ loop endlessly
-end:
-	b .
 
 @ vim:ft=armv5
