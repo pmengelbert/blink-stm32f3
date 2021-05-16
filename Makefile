@@ -2,11 +2,14 @@ AS=/usr/arm-none-eabi/bin/as
 LD=/usr/arm-none-eabi/bin/ld
 OC=/usr/arm-none-eabi/bin/objcopy
 
-all:
-	$(AS) -o $(FILE).o $(FILE).s
-	$(AS) -o startup.o startup.s
-	$(LD) -o $(FILE) $(FILE).o startup.o -Tstm32f303.ld
-	$(OC) -O binary $(FILE) $(FILE).bin
+all: build
+	$(AS) -o build/$(FILE).o $(FILE).s
+	$(AS) -o build/startup.o startup.s
+	$(LD) -o build/$(FILE) build/$(FILE).o build/startup.o -Tstm32f303.ld
+	$(OC) -O binary build/$(FILE) build/$(FILE).bin
+
+build:
+	mkdir -p build
 
 flash: $(FILE).bin
-	st-flash write $(FILE).bin 0x8000000
+	st-flash write build/$(FILE).bin 0x8000000

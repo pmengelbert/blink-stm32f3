@@ -37,9 +37,13 @@ DMA_CMAR1 = 0x40020014
 .global TIM1_UP_TIM16_IRQHandler
 
 .data
-disp_row_0: .byte 0x03
-disp_row_1: .byte 0x05
-disp_row_2: .byte 0x06
+display_buffer_row_0: .byte 0x00
+display_buffer_row_1: .byte 0x00
+display_buffer_row_2: .byte 0x00
+
+update_buffer_row_0: .byte 0x03
+update_buffer_row_1: .byte 0x05
+update_buffer_row_2: .byte 0x06
 
 .text
 
@@ -92,7 +96,7 @@ configure_capture:
 	str r0, [r1]
 
 	ldr r1, =TIM16_ARR
-	mov r0, $6 @ reset the counter after one 30th of a second
+	mov r0, $3 @ reset the counter after one 30th of a second
 	str r0, [r1]
 
 	@enable the timer
@@ -101,23 +105,70 @@ configure_capture:
 	orr r0, $0x01
 	str r0, [r1]
 
+	@ disable the channel to enable writes
+	ldr r1, =DMA_CCR1
+	mov r0, $0
+	str r0, [r1]
+
+	ldr r1, =DMA_CPAR1
+	ldr r0, =__ram_start__
+	str r0, [r1]
+
+	ldr r1, =DMA_CMAR1
+	ldr r0, =update_buffer_row_0
+	str r0, [r1]
+
 	ldr r8, =$0x00100000
 game_loop:
-	ldr r5, =__ram_start__
+	mov r6, r8
+	bl delay
+
+	ldr r5, =update_buffer_row_0
 	ldrb r4, [r5]
 	add r4, $1
+	cmp r4, $8
+	it eq
+	moveq r4, $0
 	strb r4, [r5]
 
 	ldrb r4, [r5, $1]
 	add r4, $1
+	cmp r4, $8
+	it eq
+	moveq r4, $0
 	strb r4, [r5, $1]
 
 	ldrb r4, [r5, $2]
 	add r4, $1
+	cmp r4, $8
+	it eq
+	moveq r4, $0
 	strb r4, [r5, $2]
 
-	mov r6, r8
-	bl delay
+	@ initialize dma from update buffer to diplay buffer
+	ldr r1, =DMA_CCR1
+	mov r0, $0
+	str r0, [r1]
+
+	ldr r1, =DMA_CNDTR1
+	@ ldr r0, =__data_size__
+	mov r0, $3
+	str r0, [r1]
+
+	ldr r1, =DMA_CCR1
+	/* - memory-to-memory enabled
+	   - priority: high
+	   - 8 bit memory
+	   - 8 bit peripheral
+	   - increment memory
+	   - do not increment peripheral
+	   - not circular
+	   - no interrupts
+	   - not enabled (yet)
+   */
+	ldr r0, =$0x000070d1
+	str r0, [r1]
+
 	b game_loop
 
 delay:
@@ -128,7 +179,7 @@ delay:
 interrupt_handler:
 TIM1_UP_TIM16_IRQHandler:
 	ldr r1, =GPIOA_ODR
-	ldr r2, =__ram_start__
+	ldr r2, =update_buffer_row_0
 	ldrb r0, [r2, r7]
 	mov r3, r7
 	lsl r3, $3
