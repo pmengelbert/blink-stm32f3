@@ -7,3 +7,6 @@ all:
 	$(AS) -o startup.o startup.s
 	$(LD) -o $(FILE) $(FILE).o startup.o -Tstm32f303.ld
 	$(OC) -O binary $(FILE) $(FILE).bin
+
+flash: $(FILE).bin
+	st-flash write $(FILE).bin 0x8000000
