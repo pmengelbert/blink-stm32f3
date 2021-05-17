@@ -6,3 +6,4 @@ blink
 *.bin
 interrupt
 disp
+build/
